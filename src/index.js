@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const Filter = require('bad-words');
@@ -14,8 +15,19 @@ const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users'
 const visibilityStatus = require('./utils/visibilitySync');
 
 const app = express();
+
+app.use(cors({
+    origin: 'https://chat-app-virid-pi.vercel.app',
+    methods: ['GET', 'POST']
+}));
+
 const server = createServer(app);
-const io = new Server(server); // SocketIO ожидает, что он будет вызван с помощью необработанного HTTP-сервера
+const io = new Server(server, {                 // SocketIO ожидает, что он будет вызван с помощью необработанного HTTP-сервера
+    cors: {
+        origin: 'https://chat-app-virid-pi.vercel.app',
+        methods: ['GET', 'POST']
+    }
+});
 
 const publicDirectory = path.resolve(__dirname, '../public');
 
