@@ -18,25 +18,8 @@ const server = createServer(app);
 const io = new Server(server); // SocketIO ожидает, что он будет вызван с помощью необработанного HTTP-сервера
 
 const publicDirectory = path.resolve(__dirname, '../public');
-// const createPath = (page) => path.resolve(__dirname, '../public', `${page}.html`);
 
 app.use(express.static(publicDirectory));
-
-
-// app.get('/', (req, res) => {
-//     res.render(createPath("chat"));
-// });
-
-
-// ---  Socket io --- //
-// server - to - client :
-// socket.emit - отправление события только конкретному клиенту
-// io.emit - отправляет событие каждому подключенному клиенту
-// socket.broadcast.emit - отправляет событие каждому подключенному клиенту
-// socket.join - позволяет нам присоединиться к заданной чат-комнате (это вариация между "io.emit ", "socket.broadcast " ), только к определенной комнате
-// io.to.emit - отправляет событие всем, кто находится в определенной комнате.
-// socket.broadcast.to.emit - отправка события всем, кроме конкретного клиента, но это ограничивает его определенным чатом
-// socket.id - встроенный ф-нал
 
 io.on('connection', (socket) => {
     console.log('The WebSocket connected');
@@ -71,7 +54,6 @@ io.on('connection', (socket) => {
     socket.on('userActivity', ({ isActive }) => {   // Обрабатываем событие 
         const user = getUser(socket.id);
 
-        // console.log(user);
         if (!user) return;                         // Если Пользователя нет, выбрасываем
         if (!isActive) {
             user.isActive = false;                // Если пользователь есть, но вкладка не активна
@@ -110,7 +92,6 @@ io.on('connection', (socket) => {
         const filter = new Filter();                                                // Проверка на плохие слова в чате
         if (filter.isProfane(msg)) return callback('Profanity is not allowed');   // Если в сообщении от пользователя содержится ненормативная лексика, отправляем сообщение об этом
 
-        // io.to(user.room).emit('message', generateMessage(msg, user.username));         // №6 Отправляем данное сообщение всем пользователям конкретной комнаты
 
         const { readStatus } = visibilityStatus(user);  // Проверяем активность открытых вкладок
 
@@ -161,38 +142,4 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, (error) => {
     error ? console.error(error) : console.log(`Listen PORT ${PORT}`);
 });
-
-
-
-
-
-// --- Old --- //
-
-// io.on('connection', (socket) => {
-//     console.log('The WebSocket connected');
-
-//     socket.emit('message', 'Welcome!');                        // №1 Зашел новый пользователь
-//     socket.broadcast.emit('message', 'A new user has joined!'); // №0 Отправление сообщения всем кроме себя
-
-
-//     socket.on('sendMessage', (msg, callback) => {  // №5 Сервер Получаем сообщение от пользователя
-//         const filter = new Filter();                // Проверка на плохие слова в чате
-//         if (filter.isProfane(msg)) return callback('Profanity is not allowed');   // Если в сообщении от пользователя содержится ненормативная лексика, отправляем сообщение об этом
-
-//         io.emit('message', msg);         // №6 Отправляем данное сообщение всем пользователям
-//         callback();                     // Сервер получил сообщение, можно передать аргумент
-//     });
-
-
-//     socket.on('sendLocation', (msg, callback) => {
-//         // Создали новый слушатель для локации
-//         io.emit('locationMessage', `https://google.com/maps?q=${msg.lat},${msg.lon}`);
-//         callback('Location shared!');
-//     });
-
-//     socket.on('disconnect', () => {             //№7 Пользователь покидает чат
-//         io.emit('message', 'A user has left!');
-//     });
-// });
-
 
