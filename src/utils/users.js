@@ -2,7 +2,7 @@
 
 const users = [];
 
-const addUser = ({ id, username, room, filename, imgURL, isActive }) => {
+const addUser = ({ id, username, room, imgURL, isActive }) => {
     username = username.trim().toLowerCase();
     room = room.trim().toLowerCase();
 
@@ -24,7 +24,7 @@ const addUser = ({ id, username, room, filename, imgURL, isActive }) => {
     }
 
     //Store user
-    const user = { id, username, room, imgURL, filename, isActive };
+    const user = { id, username, room, imgURL, isActive };
     users.push(user);
 
     return { user };

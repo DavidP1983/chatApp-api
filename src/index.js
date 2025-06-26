@@ -53,8 +53,6 @@ io.on('connection', (socket) => {
         const room = user.room?.slice(0, 1).toUpperCase() + user.room?.slice(1);
         io.to(user.room).emit('roomData', {
             room,
-            imgURL: user.imgURL,
-            img: user.filename,
             users: getUsersInRoom(user.room)
         });
         callback();
@@ -141,8 +139,6 @@ io.on('connection', (socket) => {
             const room = user.room?.slice(0, 1).toUpperCase() + user.room?.slice(1);
             io.to(user.room).emit('roomData', {
                 room,
-                imgURL: user.imgURL,
-                img: user.filename,
                 users: getUsersInRoom(user.room)
             });
         }
