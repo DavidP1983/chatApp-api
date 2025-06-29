@@ -94,6 +94,8 @@ io.on('connection', (socket) => {
         }
     });
 
+
+
     // --- Отправка сообщений --- //
 
     socket.on('sendMessage', (msg, callback) => {                                   // №5 Сервер Получаем сообщение от пользователя
@@ -111,6 +113,28 @@ io.on('connection', (socket) => {
     });
 
 
+    // --- Редактирование сообщений --- //
+
+    socket.on('editMessage', ({ id, msg }, callback) => {
+        const user = getUser(socket.id);
+        const filter = new Filter();
+        if (filter.isProfane(msg)) return callback('Profanity is not allowed');
+
+        io.to(user.room).emit('messageUpdated', { id, msg });
+
+        callback();
+    });
+
+
+    // --- Удаление сообщения --- //
+
+    socket.on('deleteMessage', (id) => {
+        const user = getUser(socket.id);
+        io.to(user.room).emit('messageDeleted', { user: user.username, id });
+    });
+
+
+
     // --- Отправка локации --- //
 
     socket.on('sendLocation', (msg, callback) => {
@@ -124,6 +148,8 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('locationMessage', generateLocationMessage(location, user.username, readStatus));
         callback('Location shared!');
     });
+
+
 
 
 

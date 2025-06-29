@@ -13,7 +13,8 @@
     "bad-words": "^3.0.4",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",

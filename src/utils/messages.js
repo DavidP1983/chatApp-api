@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 
 const generateMessage = (msg, username, readStatus = '') => {
     const date = new Date().getTime();
@@ -6,6 +7,7 @@ const generateMessage = (msg, username, readStatus = '') => {
         msg,
         username: name,
         createAt: date,
+        id: uuidv4(),
         readStatus
     };
 };
